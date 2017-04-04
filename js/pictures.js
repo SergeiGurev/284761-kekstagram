@@ -68,10 +68,10 @@ function getRandomComments() {
   var comments = [];
 
   if (Math.random() < 0.5) {
-    comments.push(commentsAll[Math.floor(Math.random() * 6)]);
+    comments.push(commentsAll[Math.floor(Math.random() * commentsAll.length)]);
   }
 
-  comments.push(commentsAll[Math.floor(Math.random() * 6)]);
+  comments.push(commentsAll[Math.floor(Math.random() * commentsAll.length)]);
 
   return comments;
 }
