@@ -21,25 +21,17 @@ var photos = getPhotos(NUMBER_PHOTOS);
 var uploadImageForm = document.getElementById('upload-select-image');
 var uploadImageFormInput = document.getElementById('upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
+var uploadForm = uploadOverlay.querySelector('.upload-form');
 var uploadOverlayClose = document.getElementById('upload-cancel');
-var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
 
 galleryOverlayClose.addEventListener('click', onGalleryOverlayCloseClick);
-
 galleryOverlayClose.addEventListener('keydown', onGalleryOverlayClosePress);
-
 uploadImageFormInput.addEventListener('change', onChangeUploadImput);
-
 uploadOverlayClose.addEventListener('click', onUploadOverlayClosePress);
-
-uploadTextarea.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_CODE_ESC) {
-    evt.stopPropagation();
-  }
-});
+uploadForm.addEventListener('submit', onUploadOverlaySubmit);
 
 function addPhotos(element, arrayPhotos) {
   var fragment = document.createDocumentFragment();
@@ -142,6 +134,11 @@ function closeUploadOverlay() {
   uploadImageForm.classList.remove('invisible');
   uploadOverlay.classList.add('invisible');
   document.removeEventListener('keydown', onUploadOverlayEscPress);
+}
+
+function onUploadOverlaySubmit(evt) {
+  evt.preventDefault();
+  closeUploadOverlay();
 }
 
 function onUploadOverlayClosePress() {
