@@ -180,19 +180,19 @@ function onFilterControlClick(evt) {
   if (target === filtersPanel) {
     return;
   }
-  
+
   for (var i = 0; i < imagePreview.classList.length; i++) {
     var imageClass = imagePreview.classList[i];
     if (imageClass !== DEFAULT_IMAGE_PREVIEW_CLASS) {
       var currentFilterClass = imageClass;
     }
   }
-  
+
   if (target.value !== 'none') {
     var newFilterClass = 'filter-' + target.value;
     imagePreview.classList.add(newFilterClass);
   }
-  
+
   imagePreview.classList.remove(currentFilterClass);
 }
 
