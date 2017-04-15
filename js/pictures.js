@@ -6,6 +6,7 @@ var KEY_CODE_ESC = 27;
 var SCALE_INPUT_MIN = 25;
 var SCALE_INPUT_MAX = 100;
 var SCALE_INPUT_STEP = 25;
+var DEFAULT_IMAGE_PREVIEW_CLASS = 'filter-image-preview';
 
 var commentsAll = [
   'Всё отлично!',
@@ -35,7 +36,6 @@ var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
-scaleInput.value = '100%';
 galleryOverlayClose.addEventListener('click', onGalleryOverlayCloseClick);
 galleryOverlayClose.addEventListener('keydown', onGalleryOverlayClosePress);
 uploadImageFormInput.addEventListener('change', onChangeUploadInput);
@@ -153,11 +153,11 @@ function closeUploadOverlay() {
 }
 
 function setDefaultUploadOverlay() {
-  imagePreview.className = 'filter-image-preview';
-  imagePreview.removeAttribute('style');
+  imagePreview.className = DEFAULT_IMAGE_PREVIEW_CLASS;
+  imagePreview.style.transform = 'scale(1)';
   scaleInput.value = '100%';
   uploadTextarea.value = '';
-  uploadTextarea.removeAttribute('style');
+  uploadTextarea.style.borderColor = '';
 }
 
 function onUploadOverlaySubmit(evt) {
@@ -180,16 +180,20 @@ function onFilterControlClick(evt) {
   if (target === filtersPanel) {
     return;
   }
-
-  var currentFilterClass = imagePreview.classList[1];
-
+  
+  for (var i = 0; i < imagePreview.classList.length; i++) {
+    var imageClass = imagePreview.classList[i];
+    if (imageClass !== DEFAULT_IMAGE_PREVIEW_CLASS) {
+      var currentFilterClass = imageClass;
+    }
+  }
+  
   if (target.value !== 'none') {
     var newFilterClass = 'filter-' + target.value;
-    imagePreview.classList.remove(currentFilterClass);
     imagePreview.classList.add(newFilterClass);
-  } else {
-    imagePreview.classList.remove(currentFilterClass);
   }
+  
+  imagePreview.classList.remove(currentFilterClass);
 }
 
 function onIncButtonPress() {
