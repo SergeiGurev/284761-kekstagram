@@ -3,6 +3,9 @@
 var NUMBER_PHOTOS = 25;
 var KEY_CODE_ENTER = 13;
 var KEY_CODE_ESC = 27;
+var SCALE_INPUT_MIN = 25;
+var SCALE_INPUT_MAX = 100;
+var SCALE_INPUT_STEP = 25;
 
 var commentsAll = [
   'Всё отлично!',
@@ -28,24 +31,20 @@ var imagePreview = uploadOverlay.querySelector('.filter-image-preview');
 var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
 var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
 var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
-var uploadSubmitButton = uploadOverlay.querySelector('.upload-form-submit');
-var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
-var sizeImagePreview = resize();
-var onIncButtonPress = sizeImagePreview.inc;
-var onDecButtonPress = sizeImagePreview.dec;
+var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');;
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
-
+scaleInput.value = '100%';
 galleryOverlayClose.addEventListener('click', onGalleryOverlayCloseClick);
 galleryOverlayClose.addEventListener('keydown', onGalleryOverlayClosePress);
-uploadImageFormInput.addEventListener('change', onChangeUploadImput);
+uploadImageFormInput.addEventListener('change', onChangeUploadInput);
 uploadOverlayClose.addEventListener('click', onUploadOverlayClosePress);
 uploadForm.addEventListener('submit', onUploadOverlaySubmit);
 filtersPanel.addEventListener('click', onFilterControlClick);
 incButton.addEventListener('click', onIncButtonPress);
 decButton.addEventListener('click', onDecButtonPress);
-uploadSubmitButton.addEventListener('click', onInvalidTextareaClick);
+uploadTextarea.addEventListener('invalid', onUploadTextareaInvalid);
 
 function addPhotos(element, arrayPhotos) {
   var fragment = document.createDocumentFragment();
@@ -138,7 +137,7 @@ function onUploadOverlayEscPress(evt) {
   }
 }
 
-function onChangeUploadImput() {
+function onChangeUploadInput() {
   if (uploadImageFormInput.value !== '') {
     setDefaultUploadOverlay();
     uploadImageForm.classList.add('invisible');
@@ -155,7 +154,8 @@ function closeUploadOverlay() {
 
 function setDefaultUploadOverlay() {
   imagePreview.className = 'filter-image-preview';
-  sizeImagePreview.default();
+  imagePreview.removeAttribute('style');
+  scaleInput.value = '100%';
   uploadTextarea.value = '';
   uploadTextarea.removeAttribute('style');
 }
@@ -170,10 +170,8 @@ function onUploadOverlayClosePress() {
   closeUploadOverlay();
 }
 
-function onInvalidTextareaClick() {
-  if (uploadTextarea.validity) {
-    uploadTextarea.setAttribute('style', 'border-color: red');
-  }
+function onUploadTextareaInvalid() {
+  uploadTextarea.style.borderColor = 'red';
 }
 
 function onFilterControlClick(evt) {
@@ -183,47 +181,37 @@ function onFilterControlClick(evt) {
     return;
   }
 
-  var defaultClass = 'filter-image-preview';
-  var filterClass = 'filter-' + target.value;
-
-  imagePreview.className = defaultClass;
-  imagePreview.classList.add(filterClass);
+  var currentFilterClass = imagePreview.classList[1];
+  
+  if (target.value !== 'none') {
+    var newFilterClass = 'filter-' + target.value;
+    imagePreview.classList.remove(currentFilterClass);
+    imagePreview.classList.add(newFilterClass);
+  } else {
+    imagePreview.classList.remove(currentFilterClass);
+  }
 }
 
-function resize() {
-  var min = '25%';
-  var max = '100%';
-  var step = 25;
-
-  scaleInput.value = max;
-
-  function getInc() {
-    if (scaleInput.value === max) {
-      return;
-    }
-
-    scaleInput.value = (parseInt(scaleInput.value, 10) + step) + '%';
-    imagePreview.setAttribute('style', 'transform: scale(' + (parseInt(scaleInput.value, 10) / 100) + ')');
+function onIncButtonPress() {
+  var scaleValue = parseInt(scaleInput.value, 10);
+  
+  if (scaleValue === SCALE_INPUT_MAX) {
+    return;
   }
+  
+  scaleValue += SCALE_INPUT_STEP;
+  scaleInput.value = scaleValue + '%';
+  imagePreview.setAttribute('style', 'transform: scale(' + (scaleValue / 100) + ')');
+}
 
-  function getDec() {
-    if (scaleInput.value === min) {
-      return;
-    }
-
-    scaleInput.value = (parseInt(scaleInput.value, 10) - step) + '%';
-    imagePreview.setAttribute('style', 'transform: scale(' + (parseInt(scaleInput.value, 10) / 100) + ')');
+function onDecButtonPress() {
+  var scaleValue = parseInt(scaleInput.value, 10);
+  
+  if (scaleValue === SCALE_INPUT_MIN) {
+    return;
   }
-
-  function getDefault() {
-    scaleInput.value = max;
-    imagePreview.removeAttribute('style');
-  }
-
-  return {
-    dec: getDec,
-    inc: getInc,
-    default: getDefault
-  };
-
+  
+  scaleValue -= SCALE_INPUT_STEP;
+  scaleInput.value = scaleValue + '%';
+  imagePreview.setAttribute('style', 'transform: scale(' + (scaleValue / 100) + ')');
 }
