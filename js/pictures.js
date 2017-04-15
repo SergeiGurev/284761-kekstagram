@@ -31,7 +31,7 @@ var imagePreview = uploadOverlay.querySelector('.filter-image-preview');
 var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
 var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
 var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
-var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');;
+var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
@@ -182,7 +182,7 @@ function onFilterControlClick(evt) {
   }
 
   var currentFilterClass = imagePreview.classList[1];
-  
+
   if (target.value !== 'none') {
     var newFilterClass = 'filter-' + target.value;
     imagePreview.classList.remove(currentFilterClass);
@@ -194,11 +194,11 @@ function onFilterControlClick(evt) {
 
 function onIncButtonPress() {
   var scaleValue = parseInt(scaleInput.value, 10);
-  
+
   if (scaleValue === SCALE_INPUT_MAX) {
     return;
   }
-  
+
   scaleValue += SCALE_INPUT_STEP;
   scaleInput.value = scaleValue + '%';
   imagePreview.setAttribute('style', 'transform: scale(' + (scaleValue / 100) + ')');
@@ -206,11 +206,11 @@ function onIncButtonPress() {
 
 function onDecButtonPress() {
   var scaleValue = parseInt(scaleInput.value, 10);
-  
+
   if (scaleValue === SCALE_INPUT_MIN) {
     return;
   }
-  
+
   scaleValue -= SCALE_INPUT_STEP;
   scaleInput.value = scaleValue + '%';
   imagePreview.setAttribute('style', 'transform: scale(' + (scaleValue / 100) + ')');
