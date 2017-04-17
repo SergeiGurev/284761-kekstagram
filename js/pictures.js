@@ -33,6 +33,7 @@ var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc'
 var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
 var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
 var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
+var onFilterControlClick = chengeFilter();
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
@@ -148,21 +149,20 @@ function onChangeUploadInput() {
 
 function closeUploadOverlay() {
   uploadImageForm.classList.remove('invisible');
+  uploadImageFormInput.value = '';
   uploadOverlay.classList.add('invisible');
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 }
 
 function setDefaultUploadOverlay() {
   imagePreview.className = DEFAULT_IMAGE_PREVIEW_CLASS;
-  imagePreview.style.transform = 'scale(1)';
-  scaleInput.value = '100%';
+  setScaleImage(SCALE_INPUT_MAX);
   uploadTextarea.value = '';
   uploadTextarea.style.borderColor = '';
 }
 
 function onUploadOverlaySubmit(evt) {
   evt.preventDefault();
-  setDefaultUploadOverlay();
   closeUploadOverlay();
 }
 
@@ -174,26 +174,27 @@ function onUploadTextareaInvalid() {
   uploadTextarea.style.borderColor = 'red';
 }
 
-function onFilterControlClick(evt) {
-  var target = evt.target;
+function chengeFilter() {
+  var currentFilterClass = '';
 
-  if (target === filtersPanel) {
-    return;
-  }
+  return function (evt) {
+    var target = evt.target;
 
-  for (var i = 0; i < imagePreview.classList.length; i++) {
-    var imageClass = imagePreview.classList[i];
-    if (imageClass !== DEFAULT_IMAGE_PREVIEW_CLASS) {
-      var currentFilterClass = imageClass;
+    if (target === filtersPanel) {
+      return;
     }
-  }
 
-  if (target.value !== 'none') {
-    var newFilterClass = 'filter-' + target.value;
-    imagePreview.classList.add(newFilterClass);
-  }
+    if (target.value !== 'none') {
+      var newFilterClass = 'filter-' + target.value;
+      imagePreview.classList.add(newFilterClass);
+    }
 
-  imagePreview.classList.remove(currentFilterClass);
+    if (currentFilterClass !== '') {
+      imagePreview.classList.remove(currentFilterClass);
+    }
+
+    currentFilterClass = newFilterClass;
+  };
 }
 
 function onIncButtonPress() {
@@ -204,8 +205,7 @@ function onIncButtonPress() {
   }
 
   scaleValue += SCALE_INPUT_STEP;
-  scaleInput.value = scaleValue + '%';
-  imagePreview.setAttribute('style', 'transform: scale(' + (scaleValue / 100) + ')');
+  setScaleImage(scaleValue);
 }
 
 function onDecButtonPress() {
@@ -216,6 +216,10 @@ function onDecButtonPress() {
   }
 
   scaleValue -= SCALE_INPUT_STEP;
-  scaleInput.value = scaleValue + '%';
-  imagePreview.setAttribute('style', 'transform: scale(' + (scaleValue / 100) + ')');
+  setScaleImage(scaleValue);
+}
+
+function setScaleImage(scale) {
+  scaleInput.value = scale + '%';
+  imagePreview.setAttribute('style', 'transform: scale(' + (scale / 100) + ')');
 }
