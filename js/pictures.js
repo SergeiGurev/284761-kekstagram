@@ -148,6 +148,7 @@ function onChangeUploadInput() {
 
 function closeUploadOverlay() {
   uploadImageForm.classList.remove('invisible');
+  uploadImageFormInput.value = '';
   uploadOverlay.classList.add('invisible');
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 }
@@ -162,7 +163,6 @@ function setDefaultUploadOverlay() {
 
 function onUploadOverlaySubmit(evt) {
   evt.preventDefault();
-  setDefaultUploadOverlay();
   closeUploadOverlay();
 }
 
