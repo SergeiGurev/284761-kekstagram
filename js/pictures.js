@@ -33,7 +33,7 @@ var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc'
 var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
 var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
 var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
-var onFilterControlClick = chengeFilter();
+var currentFilterClass = '';
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
@@ -174,27 +174,23 @@ function onUploadTextareaInvalid() {
   uploadTextarea.style.borderColor = 'red';
 }
 
-function chengeFilter() {
-  var currentFilterClass = '';
+function onFilterControlClick(evt) {
+  var target = evt.target;
 
-  return function (evt) {
-    var target = evt.target;
+  if (target === filtersPanel) {
+    return;
+  }
 
-    if (target === filtersPanel) {
-      return;
-    }
+  if (target.value !== 'none') {
+    var newFilterClass = 'filter-' + target.value;
+    imagePreview.classList.add(newFilterClass);
+  }
 
-    if (target.value !== 'none') {
-      var newFilterClass = 'filter-' + target.value;
-      imagePreview.classList.add(newFilterClass);
-    }
+  if (currentFilterClass !== '') {
+    imagePreview.classList.remove(currentFilterClass);
+  }
 
-    if (currentFilterClass !== '') {
-      imagePreview.classList.remove(currentFilterClass);
-    }
-
-    currentFilterClass = newFilterClass;
-  };
+  currentFilterClass = newFilterClass;
 }
 
 function onIncButtonPress() {
