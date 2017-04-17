@@ -33,7 +33,7 @@ var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc'
 var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
 var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
 var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
-var currentFilterClass = '';
+var currentFilterClass;
 
 addPhotos(pictures, photos);
 document.querySelector('.upload-overlay').classList.add('invisible');
@@ -186,10 +186,7 @@ function onFilterControlClick(evt) {
     imagePreview.classList.add(newFilterClass);
   }
 
-  if (currentFilterClass !== '') {
-    imagePreview.classList.remove(currentFilterClass);
-  }
-
+  imagePreview.classList.remove(currentFilterClass);
   currentFilterClass = newFilterClass;
 }
 
