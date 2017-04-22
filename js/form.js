@@ -86,16 +86,16 @@
     }
 
     filterBand.classList.add('invisible');
-    imagePreview.style.filter = '';
 
     if (target.value !== 'none') {
       var newFilterClass = 'filter-' + target.value;
       imagePreview.classList.add(newFilterClass);
-      filterPin.style.left = filterVal.style.width = BAND_VALUE_MAX + 'px';
       filterBand.classList.remove('invisible');
     }
 
     if (currentFilterClass !== newFilterClass) {
+      imagePreview.style.filter = '';
+      filterPin.style.left = filterVal.style.width = BAND_VALUE_MAX + 'px';
       imagePreview.classList.remove(currentFilterClass);
     }
 
