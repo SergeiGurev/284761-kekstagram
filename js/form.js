@@ -8,6 +8,13 @@
   var DEFAULT_IMAGE_PREVIEW_CLASS = 'filter-image-preview';
   var BAND_VALUE_MAX = 450;
   var BAND_VALUE_MIN = 0;
+  var FILTER_CLASSES = {
+        'sepia': 'filter-sepia',
+        'chrome': 'filter-chrome',
+        'marvin': 'filter-marvin',
+        'phobos': 'filter-phobos',
+        'heat': 'filter-heat'
+      };
 
   var uploadImageForm = document.getElementById('upload-select-image');
   var uploadImageFormInput = document.getElementById('upload-file');
@@ -88,7 +95,7 @@
     filterBand.classList.add('invisible');
 
     if (target.value !== 'none') {
-      var newFilterClass = 'filter-' + target.value;
+      var newFilterClass = FILTER_CLASSES[target.value];
       imagePreview.classList.add(newFilterClass);
       filterBand.classList.remove('invisible');
     }
@@ -161,23 +168,20 @@
   }
 
   function setFilterValue(value) {
-    var filter = currentFilterClass;
-    filter = filter.slice(7);
-
-    switch (filter) {
-      case 'sepia':
+    switch (currentFilterClass) {
+      case FILTER_CLASSES['sepia']:
         imagePreview.style.filter = 'sepia(' + (value / BAND_VALUE_MAX) + ')';
         break;
-      case 'chrome':
+      case FILTER_CLASSES['chrome']:
         imagePreview.style.filter = 'grayscale(' + (value / BAND_VALUE_MAX) + ')';
         break;
-      case 'marvin':
+      case FILTER_CLASSES['marvin']:
         imagePreview.style.filter = 'invert(' + (value * 100 / BAND_VALUE_MAX) + '%)';
         break;
-      case 'phobos':
+      case FILTER_CLASSES['phobos']:
         imagePreview.style.filter = 'blur(' + (value * 3 / BAND_VALUE_MAX) + 'px)';
         break;
-      case 'heat':
+      case FILTER_CLASSES['heat']:
         imagePreview.style.filter = 'brightness(' + (value * 3 / BAND_VALUE_MAX) + ')';
         break;
     }
