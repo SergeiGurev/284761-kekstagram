@@ -9,12 +9,12 @@
   var BAND_VALUE_MAX = 450;
   var BAND_VALUE_MIN = 0;
   var FILTER_CLASSES = {
-        'sepia': 'filter-sepia',
-        'chrome': 'filter-chrome',
-        'marvin': 'filter-marvin',
-        'phobos': 'filter-phobos',
-        'heat': 'filter-heat'
-      };
+    'sepia': 'filter-sepia',
+    'chrome': 'filter-chrome',
+    'marvin': 'filter-marvin',
+    'phobos': 'filter-phobos',
+    'heat': 'filter-heat'
+  };
 
   var uploadImageForm = document.getElementById('upload-select-image');
   var uploadImageFormInput = document.getElementById('upload-file');
