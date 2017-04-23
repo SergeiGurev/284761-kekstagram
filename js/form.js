@@ -2,9 +2,7 @@
 
 (function () {
   var KEY_CODE_ESC = 27;
-  var SCALE_INPUT_MIN = 25;
-  var SCALE_INPUT_MAX = 100;
-  var SCALE_INPUT_STEP = 25;
+  var SCALE_INPUT_DEFAULT = 100;
   var DEFAULT_IMAGE_PREVIEW_CLASS = 'filter-image-preview';
   var BAND_VALUE_MAX = 450;
   var BAND_VALUE_MIN = 0;
@@ -23,25 +21,24 @@
   var uploadOverlayClose = document.getElementById('upload-cancel');
   var filtersPanel = uploadOverlay.querySelector('.upload-filter-controls');
   var imagePreview = uploadOverlay.querySelector('.filter-image-preview');
-  var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
-  var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
-  var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
+  var scaleElement = uploadOverlay.querySelector('.upload-resize-controls');
+  var scaleInput = scaleElement.querySelector('.upload-resize-controls-value');
   var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
   var currentFilterClass;
   var filterBand = uploadOverlay.querySelector('.upload-filter-level');
-  var filterPin = document.querySelector('.upload-filter-level-pin');
-  var filterVal = document.querySelector('.upload-filter-level-val');
+  var filterPin = filterBand.querySelector('.upload-filter-level-pin');
+  var filterVal = filterBand.querySelector('.upload-filter-level-val');
 
-  uploadImageFormInput.addEventListener('change', onChangeUploadInput);
+  uploadImageFormInput.addEventListener('change', onUploadInputChange);
   uploadOverlayClose.addEventListener('click', onUploadOverlayClosePress);
   uploadForm.addEventListener('submit', onUploadOverlaySubmit);
-  filtersPanel.addEventListener('click', onFilterControlClick);
-  incButton.addEventListener('click', onIncButtonPress);
-  decButton.addEventListener('click', onDecButtonPress);
   uploadTextarea.addEventListener('invalid', onUploadTextareaInvalid);
   filterPin.addEventListener('mousedown', onFilterPinMousedown);
 
-  function onChangeUploadInput() {
+  window.initializeScale(scaleElement, setScaleImage);
+  window.initializeFilters(filtersPanel, setFilterImage);
+
+  function onUploadInputChange() {
     if (uploadImageFormInput.value !== '') {
       setDefaultUploadOverlay();
       uploadImageForm.classList.add('invisible');
@@ -65,11 +62,12 @@
 
   function setDefaultUploadOverlay() {
     imagePreview.className = DEFAULT_IMAGE_PREVIEW_CLASS;
-    setScaleImage(SCALE_INPUT_MAX);
+    setScaleImage(SCALE_INPUT_DEFAULT);
     imagePreview.style.filter = '';
     uploadTextarea.value = '';
     uploadTextarea.style.borderColor = '';
     filterBand.classList.add('invisible');
+    setPinPosition(BAND_VALUE_MAX);
   }
 
   function onUploadOverlaySubmit(evt) {
@@ -85,50 +83,22 @@
     uploadTextarea.style.borderColor = 'red';
   }
 
-  function onFilterControlClick(evt) {
-    var target = evt.target;
-
-    if (!target.value) {
-      return;
-    }
-
+  function setFilterImage(filter) {
     filterBand.classList.add('invisible');
 
-    if (target.value !== 'none') {
-      var newFilterClass = FILTER_CLASSES[target.value];
+    if (filter !== 'none') {
+      var newFilterClass = FILTER_CLASSES[filter];
       imagePreview.classList.add(newFilterClass);
       filterBand.classList.remove('invisible');
     }
 
     if (currentFilterClass !== newFilterClass) {
       imagePreview.style.filter = '';
-      filterPin.style.left = filterVal.style.width = BAND_VALUE_MAX + 'px';
+      setPinPosition(BAND_VALUE_MAX);
       imagePreview.classList.remove(currentFilterClass);
     }
 
     currentFilterClass = newFilterClass;
-  }
-
-  function onIncButtonPress() {
-    var scaleValue = parseInt(scaleInput.value, 10);
-
-    if (scaleValue === SCALE_INPUT_MAX) {
-      return;
-    }
-
-    scaleValue += SCALE_INPUT_STEP;
-    setScaleImage(scaleValue);
-  }
-
-  function onDecButtonPress() {
-    var scaleValue = parseInt(scaleInput.value, 10);
-
-    if (scaleValue === SCALE_INPUT_MIN) {
-      return;
-    }
-
-    scaleValue -= SCALE_INPUT_STEP;
-    setScaleImage(scaleValue);
   }
 
   function setScaleImage(scale) {
@@ -148,11 +118,6 @@
       var value = filterPin.offsetLeft - shift;
 
       startCoord = moveEvt.clientX;
-
-      if (value >= BAND_VALUE_MIN && value <= BAND_VALUE_MAX) {
-        filterPin.style.left = filterVal.style.width = value + 'px';
-      }
-
       setFilterValue(value);
     };
 
@@ -168,6 +133,8 @@
   }
 
   function setFilterValue(value) {
+    setPinPosition(value);
+
     switch (currentFilterClass) {
       case FILTER_CLASSES['sepia']:
         imagePreview.style.filter = 'sepia(' + (value / BAND_VALUE_MAX) + ')';
@@ -184,6 +151,12 @@
       case FILTER_CLASSES['heat']:
         imagePreview.style.filter = 'brightness(' + (value * 3 / BAND_VALUE_MAX) + ')';
         break;
+    }
+  }
+
+  function setPinPosition(value) {
+    if (value >= BAND_VALUE_MIN && value <= BAND_VALUE_MAX) {
+      filterPin.style.left = filterVal.style.width = value + 'px';
     }
   }
 })();
