@@ -16,32 +16,21 @@ window.initializeScale = (function () {
     decElement.addEventListener('click', onDecButtonPress);
 
     function onIncButtonPress() {
-      setValue(true);
+      setValue(valueObject.max, valueObject.step);
     }
 
     function onDecButtonPress() {
-      setValue();
+      setValue(valueObject.min, -valueObject.step);
     }
 
-    function setValue(flag) {
+    function setValue(limit, step) {
       var value = parseInt(valueElement.value, 10);
 
-      if (flag) {
-
-        if (value === valueObject.max) {
-          return;
-        }
-
-        (value += valueObject.step);
-      } else {
-
-        if (value === valueObject.min) {
-          return;
-        }
-
-        (value -= valueObject.step);
+      if (value === limit) {
+        return;
       }
 
+      value += step;
       cb(value);
     }
   };
