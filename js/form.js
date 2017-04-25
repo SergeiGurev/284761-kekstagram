@@ -2,7 +2,6 @@
 
 (function () {
   var KEY_CODE_ESC = 27;
-  var SCALE_INPUT_DEFAULT = 100;
   var DEFAULT_IMAGE_PREVIEW_CLASS = 'filter-image-preview';
   var BAND_VALUE_MAX = 450;
   var BAND_VALUE_MIN = 0;
@@ -13,6 +12,11 @@
     'phobos': 'filter-phobos',
     'heat': 'filter-heat'
   };
+  var SCALE_INPUT_VALUES = {
+    max: 100,
+    min: 25,
+    step: 25
+  };
 
   var uploadImageForm = document.getElementById('upload-select-image');
   var uploadImageFormInput = document.getElementById('upload-file');
@@ -21,8 +25,9 @@
   var uploadOverlayClose = document.getElementById('upload-cancel');
   var filtersPanel = uploadOverlay.querySelector('.upload-filter-controls');
   var imagePreview = uploadOverlay.querySelector('.filter-image-preview');
-  var scaleElement = uploadOverlay.querySelector('.upload-resize-controls');
-  var scaleInput = scaleElement.querySelector('.upload-resize-controls-value');
+  var incButton = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
+  var decButton = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
+  var scaleInput = uploadOverlay.querySelector('.upload-resize-controls-value');
   var uploadTextarea = uploadOverlay.querySelector('.upload-form-description');
   var currentFilterClass;
   var filterBand = uploadOverlay.querySelector('.upload-filter-level');
@@ -35,7 +40,7 @@
   uploadTextarea.addEventListener('invalid', onUploadTextareaInvalid);
   filterPin.addEventListener('mousedown', onFilterPinMousedown);
 
-  window.initializeScale(scaleElement, setScaleImage);
+  window.initializeScale(incButton, decButton, scaleInput, setScaleImage, SCALE_INPUT_VALUES);
   window.initializeFilters(filtersPanel, setFilterImage);
 
   function onUploadInputChange() {
@@ -62,7 +67,7 @@
 
   function setDefaultUploadOverlay() {
     imagePreview.className = DEFAULT_IMAGE_PREVIEW_CLASS;
-    setScaleImage(SCALE_INPUT_DEFAULT);
+    setScaleImage(SCALE_INPUT_VALUES.max);
     imagePreview.style.filter = '';
     uploadTextarea.value = '';
     uploadTextarea.style.borderColor = '';

@@ -1,38 +1,48 @@
 'use strict';
 
 window.initializeScale = (function () {
-  var SCALE_INPUT_MIN = 25;
-  var SCALE_INPUT_MAX = 100;
-  var SCALE_INPUT_STEP = 25;
+  var VALUE_OBJECT_DEFAULT = {
+    max: 100,
+    min: 1,
+    step: 1
+  };
 
-  return function (element, setScale) {
-    var decButton = element.querySelector('.upload-resize-controls-button-dec');
-    var incButton = element.querySelector('.upload-resize-controls-button-inc');
-    var input = element.querySelector('.upload-resize-controls-value');
+  return function (incElement, decElement, valueElement, cb, valueObject) {
+    if (!valueObject) {
+      valueObject = VALUE_OBJECT_DEFAULT;
+    }
 
-    incButton.addEventListener('click', onIncButtonPress);
-    decButton.addEventListener('click', onDecButtonPress);
+    incElement.addEventListener('click', onIncButtonPress);
+    decElement.addEventListener('click', onDecButtonPress);
 
     function onIncButtonPress() {
-      var scaleValue = parseInt(input.value, 10);
-
-      if (scaleValue === SCALE_INPUT_MAX) {
-        return;
-      }
-
-      scaleValue += SCALE_INPUT_STEP;
-      setScale(scaleValue);
+      setValue(true);
     }
 
     function onDecButtonPress() {
-      var scaleValue = parseInt(input.value, 10);
+      setValue();
+    }
 
-      if (scaleValue === SCALE_INPUT_MIN) {
-        return;
+    function setValue(flag) {
+      var value = parseInt(valueElement.value, 10);
+
+      if (flag) {
+
+        if (value === valueObject.max) {
+          return;
+        }
+
+        (value += valueObject.step);
+      } else {
+
+        if (value === valueObject.min) {
+          return;
+        }
+
+        (value -= valueObject.step);
       }
 
-      scaleValue -= SCALE_INPUT_STEP;
-      setScale(scaleValue);
+      cb(value);
     }
   };
 })();
