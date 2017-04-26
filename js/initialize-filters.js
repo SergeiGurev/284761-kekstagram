@@ -1,8 +1,8 @@
 'use strict';
 
 window.initializeFilters = (function () {
-  return function (filterElement, setFilter) {
-    filterElement.addEventListener('click', onFilterElementClick);
+  return function (filtersElement, setFilter) {
+    filtersElement.addEventListener('click', onFilterElementClick);
 
     function onFilterElementClick(evt) {
       var target = evt.target;
