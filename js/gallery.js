@@ -32,17 +32,19 @@
   }
 
   function onPopularFilterClick() {
-    window.debounce(renderPhotos, photos);
+    var place = 'popular';
+    window.debounce(renderPhotos, photos, place);
   }
 
   function onNewFilterClick() {
     var newPhotos = [];
+    var place = 'new';
 
     for (var i = 0; i < LIMIT_NEW_PHOTOS; i++) {
       newPhotos[i] = randomPhoto();
     }
 
-    window.debounce(renderPhotos, newPhotos);
+    window.debounce(renderPhotos, newPhotos, place);
 
     function randomPhoto() {
       var photo = photos[Math.floor(Math.random() * photos.length)];
@@ -57,12 +59,13 @@
 
   function onDiscussedFilterClick() {
     var discussedPhotos = photos.slice();
+    var place = 'discussed';
 
     discussedPhotos.sort(function (a, b) {
       return (b.comments.length - a.comments.length);
     });
 
-    window.debounce(renderPhotos, discussedPhotos);
+    window.debounce(renderPhotos, discussedPhotos, place);
   }
 
   function renderPhotos(arrayPhotos) {
