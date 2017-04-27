@@ -2,15 +2,20 @@
 
 (function () {
   var DEBOUNCE_INTERVAL = 500;
-  var lastTimeout;
+  var INTERVAL_PASS = 1;
+  var INTERVAL_NOT_PASS = 0;
+  var intervalStatus = INTERVAL_PASS;
 
   window.debounce = function (fun, arg) {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
+    if (intervalStatus === INTERVAL_NOT_PASS) {
+      return;
     }
 
-    lastTimeout = window.setTimeout(function () {
-      fun(arg);
+    fun(arg);
+    intervalStatus = INTERVAL_NOT_PASS;
+
+    setTimeout(function () {
+      intervalStatus = INTERVAL_PASS;
     }, DEBOUNCE_INTERVAL);
   };
 })();
