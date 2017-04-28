@@ -3,6 +3,7 @@
 (function () {
   var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/kekstagram/data';
   var LIMIT_NEW_PHOTOS = 10;
+  var DEBOUNCE_INTERVAL = 500;
 
   var pictures = document.querySelector('.pictures');
   var filtersBlock = document.querySelector('.filters');
@@ -32,19 +33,17 @@
   }
 
   function onPopularFilterClick() {
-    var place = 'popular';
-    window.debounce(renderPhotos, photos, place);
+    window.debounce(renderPhotos, photos, DEBOUNCE_INTERVAL);
   }
 
   function onNewFilterClick() {
     var newPhotos = [];
-    var place = 'new';
 
     for (var i = 0; i < LIMIT_NEW_PHOTOS; i++) {
       newPhotos[i] = randomPhoto();
     }
 
-    window.debounce(renderPhotos, newPhotos, place);
+    window.debounce(renderPhotos, newPhotos, DEBOUNCE_INTERVAL);
 
     function randomPhoto() {
       var photo = photos[Math.floor(Math.random() * photos.length)];
@@ -59,13 +58,12 @@
 
   function onDiscussedFilterClick() {
     var discussedPhotos = photos.slice();
-    var place = 'discussed';
 
     discussedPhotos.sort(function (a, b) {
       return (b.comments.length - a.comments.length);
     });
 
-    window.debounce(renderPhotos, discussedPhotos, place);
+    window.debounce(renderPhotos, discussedPhotos, DEBOUNCE_INTERVAL);
   }
 
   function renderPhotos(arrayPhotos) {
