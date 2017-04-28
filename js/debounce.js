@@ -6,10 +6,12 @@
   var INTERVAL_NOT_PASS = 0;
   var intervalStatus = INTERVAL_PASS;
   var currentPlaceCall;
+  var timeout;
 
   window.debounce = function (fun, arg, placeCall) {
     if (currentPlaceCall !== placeCall) {
       intervalStatus = INTERVAL_PASS;
+      clearTimeout(timeout);
     }
     if (intervalStatus === INTERVAL_NOT_PASS) {
       return;
@@ -19,7 +21,7 @@
     intervalStatus = INTERVAL_NOT_PASS;
     currentPlaceCall = placeCall;
 
-    setTimeout(function () {
+    timeout = setTimeout(function () {
       intervalStatus = INTERVAL_PASS;
     }, DEBOUNCE_INTERVAL);
   };
