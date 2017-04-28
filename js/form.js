@@ -5,6 +5,7 @@
   var DEFAULT_IMAGE_PREVIEW_CLASS = 'filter-image-preview';
   var BAND_VALUE_MAX = 450;
   var BAND_VALUE_MIN = 0;
+  var IMAGE_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var FILTER_CLASSES = {
     'sepia': 'filter-sepia',
     'chrome': 'filter-chrome',
@@ -44,11 +45,25 @@
   window.initializeFilters(filtersPanel, setFilterImage);
 
   function onUploadInputChange() {
-    if (uploadImageFormInput.value !== '') {
-      setDefaultUploadOverlay();
-      uploadImageForm.classList.add('invisible');
-      uploadOverlay.classList.remove('invisible');
-      document.addEventListener('keydown', onUploadOverlayEscPress);
+    var file = uploadImageFormInput.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = IMAGE_FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        imagePreview.src = reader.result;
+        setDefaultUploadOverlay();
+        uploadImageForm.classList.add('invisible');
+        uploadOverlay.classList.remove('invisible');
+        document.addEventListener('keydown', onUploadOverlayEscPress);
+      });
+
+      reader.readAsDataURL(file);
     }
   }
 
