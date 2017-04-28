@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Гурьев](https://up.htmlacademy.ru/javascript/9/user/284761).
-* Наставник: [Алексей Дмитриев](https://htmlacademy.ru/profile/id245991).
+* Наставник: [Сергей Катревич](https://htmlacademy.ru/profile/id189351).
 
 ---
 
