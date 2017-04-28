@@ -7,10 +7,8 @@
 
   var pictures = document.querySelector('.pictures');
   var filtersBlock = document.querySelector('.filters');
-  var popularFilter = filtersBlock.querySelector('#filter-popular');
-  var newFilter = filtersBlock.querySelector('#filter-new');
-  var discussedFilter = filtersBlock.querySelector('#filter-discussed');
   var photos = [];
+  var debounce = window.debounce(DEBOUNCE_INTERVAL);
 
   document.querySelector('.upload-overlay').classList.add('invisible');
   window.load(URL, contentLoadHandler);
@@ -23,27 +21,36 @@
     photos = data;
     renderPhotos(photos);
     filtersBlock.classList.remove('hidden');
-    initializeSorts();
+    filtersBlock.addEventListener('click', onFiltersBlockClick);
   }
 
-  function initializeSorts() {
-    popularFilter.addEventListener('click', onPopularFilterClick);
-    newFilter.addEventListener('click', onNewFilterClick);
-    discussedFilter.addEventListener('click', onDiscussedFilterClick);
+  function onFiltersBlockClick(evt) {
+    var target = evt.target;
+
+    switch (target.value) {
+      case 'popular':
+        debounce(renderPopularPhotos);
+        break;
+      case 'new':
+        debounce(renderNewPhotos);
+        break;
+      case 'discussed':
+        debounce(renderDiscussedPhotos);
+    }
   }
 
-  function onPopularFilterClick() {
-    window.debounce(renderPhotos, photos, DEBOUNCE_INTERVAL);
+  function renderPopularPhotos() {
+    renderPhotos(photos);
   }
 
-  function onNewFilterClick() {
+  function renderNewPhotos() {
     var newPhotos = [];
 
     for (var i = 0; i < LIMIT_NEW_PHOTOS; i++) {
       newPhotos[i] = randomPhoto();
     }
 
-    window.debounce(renderPhotos, newPhotos, DEBOUNCE_INTERVAL);
+    renderPhotos(newPhotos);
 
     function randomPhoto() {
       var photo = photos[Math.floor(Math.random() * photos.length)];
@@ -56,14 +63,14 @@
     }
   }
 
-  function onDiscussedFilterClick() {
+  function renderDiscussedPhotos() {
     var discussedPhotos = photos.slice();
 
     discussedPhotos.sort(function (a, b) {
       return (b.comments.length - a.comments.length);
     });
 
-    window.debounce(renderPhotos, discussedPhotos, DEBOUNCE_INTERVAL);
+    renderPhotos(discussedPhotos);
   }
 
   function renderPhotos(arrayPhotos) {
