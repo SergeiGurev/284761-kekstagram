@@ -1,7 +1,7 @@
 'use strict';
 
 window.initializeFilters = (function () {
-  return function (filtersElement, setFilter) {
+  return function (filtersElement, cb) {
     filtersElement.addEventListener('click', onFilterElementClick);
 
     function onFilterElementClick(evt) {
@@ -11,7 +11,7 @@ window.initializeFilters = (function () {
         return;
       }
 
-      setFilter(target.value);
+      cb(target.value);
     }
   };
 })();

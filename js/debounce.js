@@ -1,12 +1,12 @@
 'use strict';
 
-(function () {
-  window.debounce = function (interval) {
+window.debounce = (function () {
+  return function (interval) {
     var intervalPass = true;
 
-    return function (fun) {
+    return function (fun, evt) {
       if (!intervalPass) {
-        event.preventDefault();
+        evt.preventDefault();
         return;
       }
 

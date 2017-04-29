@@ -1,9 +1,9 @@
 'use strict';
 
-(function () {
+window.createPicture = (function () {
   var pictureTemplate = document.querySelector('#picture-template').content;
 
-  window.createPhotoElement = function (photo) {
+  return function (photo) {
     var photoElement = pictureTemplate.cloneNode(true);
     var picture = photoElement.querySelector('a');
     var onPictureClick = function (evt) {

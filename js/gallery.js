@@ -11,9 +11,9 @@
   var debounce = window.debounce(DEBOUNCE_INTERVAL);
 
   document.querySelector('.upload-overlay').classList.add('invisible');
-  window.load(URL, contentLoadHandler);
+  window.load(URL, onContentLoad);
 
-  function contentLoadHandler(data) {
+  function onContentLoad(data) {
     if (!data) {
       return;
     }
@@ -29,13 +29,14 @@
 
     switch (target.value) {
       case 'popular':
-        debounce(renderPopularPhotos);
+        debounce(renderPopularPhotos, evt);
         break;
       case 'new':
-        debounce(renderNewPhotos);
+        debounce(renderNewPhotos, evt);
         break;
       case 'discussed':
-        debounce(renderDiscussedPhotos);
+        debounce(renderDiscussedPhotos, evt);
+        break;
     }
   }
 
@@ -47,20 +48,16 @@
     var newPhotos = [];
 
     for (var i = 0; i < LIMIT_NEW_PHOTOS; i++) {
-      newPhotos[i] = randomPhoto();
+      newPhotos[i] = getRandomPhoto(newPhotos);
     }
 
     renderPhotos(newPhotos);
+  }
 
-    function randomPhoto() {
-      var photo = photos[Math.floor(Math.random() * photos.length)];
+  function getRandomPhoto(arrPhotos) {
+    var photo = photos[Math.floor(Math.random() * photos.length)];
 
-      if (newPhotos.indexOf(photo) !== -1) {
-        return randomPhoto();
-      }
-
-      return photo;
-    }
+    return (arrPhotos.indexOf(photo) !== -1) ? getRandomPhoto(arrPhotos) : photo;
   }
 
   function renderDiscussedPhotos() {
@@ -76,10 +73,10 @@
   function renderPhotos(arrayPhotos) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < arrayPhotos.length; i++) {
-      var photoElement = window.createPhotoElement(arrayPhotos[i]);
+    arrayPhotos.forEach(function (it) {
+      var photoElement = window.createPicture(it);
       fragment.appendChild(photoElement);
-    }
+    });
 
     pictures.innerHTML = '';
     pictures.appendChild(fragment);

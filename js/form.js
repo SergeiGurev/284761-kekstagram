@@ -34,6 +34,7 @@
   var filterBand = uploadOverlay.querySelector('.upload-filter-level');
   var filterPin = filterBand.querySelector('.upload-filter-level-pin');
   var filterVal = filterBand.querySelector('.upload-filter-level-val');
+  var startCoord;
 
   uploadImageFormInput.addEventListener('change', onUploadInputChange);
   uploadOverlayClose.addEventListener('click', onUploadOverlayClosePress);
@@ -129,27 +130,27 @@
   function onFilterPinMousedown(evt) {
     evt.preventDefault();
 
-    var startCoord = evt.clientX;
-
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = startCoord - moveEvt.clientX;
-      var value = filterPin.offsetLeft - shift;
-
-      startCoord = moveEvt.clientX;
-      setFilterValue(value);
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
+    startCoord = evt.clientX;
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  }
+
+  function onMouseMove(moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoord - moveEvt.clientX;
+    var value = filterPin.offsetLeft - shift;
+
+    startCoord = moveEvt.clientX;
+    setFilterValue(value);
+  }
+
+  function onMouseUp(upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
   }
 
   function setFilterValue(value) {

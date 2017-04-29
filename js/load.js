@@ -1,7 +1,7 @@
 'use strict';
 
-(function () {
-  window.load = function (url, cb) {
+window.load = (function () {
+  return function (url, cb) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -17,11 +17,11 @@
 
       cb(xhr.response);
     }
-
-    function onXhrError() {
-      onErrorLoad('Произошла ошибка соединения');
-    }
   };
+
+  function onXhrError() {
+    onErrorLoad('Произошла ошибка соединения');
+  }
 
   function onErrorLoad(errorMessage) {
     var node = document.createElement('div');
