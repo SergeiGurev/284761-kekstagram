@@ -24,6 +24,10 @@ body {
   color: #ffe753;
 }
 
+img {
+  max-width: 100%;
+}
+
 .invisible {
   display: none;
 }
